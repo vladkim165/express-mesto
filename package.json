@@ -6,7 +6,7 @@
   "scripts": {
     "start": "node app.js",
     "dev": "nodemon app.js",
-    "lint": "npx eslint"
+    "lint": "npx eslint ."
   },
   "repository": {
     "type": "git",
@@ -20,11 +20,13 @@
   "homepage": "https://github.com/vladkim165/express-mesto#readme",
   "devDependencies": {
     "eslint": "^8.2.0",
+    "eslint-plugin-react": "^7.27.0",
     "nodemon": "^2.0.15"
   },
   "dependencies": {
     "eslint-config-airbnb": "^19.0.0",
     "eslint-plugin-import": "^2.25.3",
-    "express": "^4.17.1"
+    "express": "^4.17.1",
+    "mongoose": "^6.0.12"
   }
 }
