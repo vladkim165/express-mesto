@@ -16,5 +16,8 @@ module.exports = {
   ],
   rules: {
     'no-underscore-dangle': 0,
+    'func-names': ['error', 'never'],
+    'consistent-return': 0,
+    'no-unused-vars': ['error', { argsIgnorePattern: '^_' }],
   },
 };
