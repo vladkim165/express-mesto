@@ -38,11 +38,18 @@ module.exports.getAllCards = (req, res, next) => {
 };
 
 module.exports.deleteCard = (req, res, next) => {
+  const userId = req.user._id;
   Card.findByIdAndRemove(req.params.cardId)
     .then((card) => {
       if (!card) {
         const err = new Error('Ошибка. Карточка не найдена');
-        err.statusCode = 404;
+        err.statusCode = 401;
+        next(err);
+      }
+      if (!card.owner === userId) {
+        const err = new Error('Ошибка. Вы не являетесь создателем карточки');
+        err.statusCode = 403;
+
         next(err);
       }
       return res.status(200).send(`Карточка успешно удалена: ${card}`);

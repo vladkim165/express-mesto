@@ -5,7 +5,7 @@ module.exports = (req, res, next) => {
 
   if (!cookie) {
     const err = new Error('Необходима авторизация');
-    err.statusCode = 403;
+    err.statusCode = 401;
 
     next(err);
   }
@@ -13,7 +13,8 @@ module.exports = (req, res, next) => {
   let payload;
 
   try {
-    payload = jwt.verify(cookie, process.env.JWT_SECRET);
+    const { JWT_SECRET = 'dev-key' } = process.env;
+    payload = jwt.verify(cookie, JWT_SECRET);
   } catch (e) {
     const err = new Error('Необходима авторизация. Неверный токен');
     err.statusCode = 401;

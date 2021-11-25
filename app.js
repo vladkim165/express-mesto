@@ -1,6 +1,7 @@
 const express = require('express');
 const mongoose = require('mongoose');
 const cookieParser = require('cookie-parser');
+const { celebrate, Joi, errors } = require('celebrate');
 
 const { PORT = 3000 } = process.env;
 const app = express();
@@ -18,12 +19,28 @@ app.use(express.urlencoded({
 }));
 app.use(cookieParser());
 
-app.post('/signin', login);
-app.post('/signup', createUser);
+app.post('/signin', celebrate({
+  body: Joi.object().keys({
+    email: Joi.string().required().email(),
+    password: Joi.string().required(),
+  }),
+}), login);
+app.post('/signup', celebrate({
+  body: Joi.object().keys({
+    email: Joi.string().required().email(),
+    password: Joi.string().required(),
+  }),
+}), createUser);
 
 app.use(auth);
 app.use('/users', require('./routes/users'));
 app.use('/cards', require('./routes/cards'));
+
+app.use(errors());
+
+app.get('*', (_req, res) => {
+  res.status(404).send({ message: 'Запрашиваемый ресурс не найден' });
+});
 
 app.use(errorHandler);
 

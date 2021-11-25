@@ -1,4 +1,3 @@
-const validator = require('validator');
 const bcrypt = require('bcrypt');
 const User = require('../models/user');
 
@@ -10,13 +9,6 @@ module.exports.createUser = (req, res, next) => {
     email,
     password,
   } = req.body;
-
-  if (!validator.isEmail(email)) {
-    const err = new Error('Неверный формат почты');
-    err.statusCode = 400;
-
-    next(err);
-  }
 
   return bcrypt.hash(password, 10)
     .then((hash) => {
@@ -116,9 +108,9 @@ module.exports.getAllUsers = (req, res, next) => {
 };
 
 module.exports.editProfile = (req, res, next) => {
-  const { name, about, avatar } = req.body;
+  const { name, about } = req.body;
   User.findByIdAndUpdate(req.user._id, {
-    name, about, avatar,
+    name, about,
   }, {
     new: true,
     runValidators: true,
@@ -130,17 +122,10 @@ module.exports.editProfile = (req, res, next) => {
 
         next(err);
       }
-      const {
-        userName,
-        userAbout,
-        userAvatar,
-        _id,
-      } = user;
       return res.status(200).send({
-        userName,
-        userAbout,
-        userAvatar,
-        _id,
+        name,
+        about,
+        _id: user._id,
       });
     })
     .catch((e) => {

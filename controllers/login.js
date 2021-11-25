@@ -17,7 +17,12 @@ module.exports.login = (req, res, next) => {
         httpOnly: true,
         sameSite: true,
       });
-      res.end();
+      res.status(200).send({ message: 'Вы успешно залогинены' });
     })
-    .catch(next);
+    .catch((_e) => {
+      const err = new Error('Введены неправильный email или пароль');
+      err.statusCode = 401;
+
+      next(err);
+    });
 };
