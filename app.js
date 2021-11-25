@@ -38,8 +38,11 @@ app.use('/cards', require('./routes/cards'));
 
 app.use(errors());
 
-app.get('*', (_req, res) => {
-  res.status(404).send({ message: 'Запрашиваемый ресурс не найден' });
+app.get('*', (_req, _res, next) => {
+  const err = new Error('Запрашиваемый ресурс не найден');
+  err.statusCode = 404;
+
+  next(err);
 });
 
 app.use(errorHandler);
