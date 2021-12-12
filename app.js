@@ -10,6 +10,8 @@ const { login } = require('./controllers/login');
 const { createUser } = require('./controllers/users');
 const auth = require('./middlewares/auth');
 const errorHandler = require('./middlewares/errorHandler');
+const { requestLogger, errorLogger } = require('./middlewares/logger');
+const allowedOrigins = require('./middlewares/cors');
 
 mongoose.connect('mongodb://localhost:27017/mestodb');
 
@@ -18,6 +20,9 @@ app.use(express.urlencoded({
   extended: true,
 }));
 app.use(cookieParser());
+app.use(requestLogger);
+
+app.use(allowedOrigins);
 
 app.post('/signin', celebrate({
   body: Joi.object().keys({
@@ -35,6 +40,8 @@ app.post('/signup', celebrate({
 app.use(auth);
 app.use('/users', require('./routes/users'));
 app.use('/cards', require('./routes/cards'));
+
+app.use(errorLogger);
 
 app.use(errors());
 
